@@ -64,12 +64,33 @@ class NhkBaseIE(InfoExtractor):
         }
         if is_video:
             vod_id = episode['vod_id']
+            js_page = self._download_webpage(
+               f'https://movie-s.nhk.or.jp/v/refid/nhkworld/prefid/{vod_id}', vod_id,
+               'Downloading JS info', query={
+                   'embed': 'js',
+                   'targetId': 'videoplayer',
+                   'de-responsive': True,
+                   'de-callback-method': 'nwCustomCallback',
+                   'de-appid': vod_id,
+                   'de-subtitle-on': False,
+               })
+            print("JS PAGE RESULT")
+            #print (js_page)    
+            data2start = js_page.find("'data-de-program-uuid','")
+            dataUid=js_page[data2start+24:data2start+24+8]
+            print (js_page[data2start+24:data2start+24+8])
+            data1start = js_page.find("'data-de-api-key','")
+            print(js_page[data1start+19:data1start+19+36])
+            dataApiKey=js_page[data1start+19:data1start+19+36]
+
             info.update({
                 '_type': 'url_transparent',
-                'ie_key': 'Piksel',
-                'url': 'https://player.piksel.com/v/refid/nhkworld/prefid/' + vod_id,
-                'id': vod_id,
-            })
+                #'ie_key': 'Piksel',
+                'ie_key': NhkVodIE.ie_key(),
+                'url': 'https://movie-s.nhk.or.jp/ws/ws_program/api/'+dataApiKey+'/apiv/5/mode/json?v=' + dataUid,
+                # 'url': 'https://player.piksel.com/v/refid/nhkworld/prefid/' + vod_id,
+                 'id': vod_id,
+             })
         else:
             if fetch_episode:
                 audio_path = episode['audio']['audio']
