@@ -77,7 +77,7 @@ class NhkBaseIE(InfoExtractor):
             print("JS PAGE RESULT")
             #print (js_page)    
             data2start = js_page.find("'data-de-program-uuid','")
-            dataUid=js_page[data2start+24:data2start+24+8]
+            dataProgramUuid=js_page[data2start+24:data2start+24+8]
             print (js_page[data2start+24:data2start+24+8])
             data1start = js_page.find("'data-de-api-key','")
             print(js_page[data1start+19:data1start+19+36])
@@ -87,7 +87,7 @@ class NhkBaseIE(InfoExtractor):
                 '_type': 'url_transparent',
                 #'ie_key': 'Piksel',
                 'ie_key': NhkVodIE.ie_key(),
-                'url': 'https://movie-s.nhk.or.jp/ws/ws_program/api/'+dataApiKey+'/apiv/5/mode/json?v=' + dataUid,
+                'url': 'https://movie-s.nhk.or.jp/ws/ws_program/api/'+dataApiKey+'/apiv/5/mode/json?v=' + dataProgramUuid,
                 # 'url': 'https://player.piksel.com/v/refid/nhkworld/prefid/' + vod_id,
                  'id': vod_id,
              })
